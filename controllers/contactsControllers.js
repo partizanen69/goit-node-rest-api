@@ -48,10 +48,26 @@ const updateContact = async (req, res) => {
   res.status(200).json(updatedContact);
 };
 
+const updateStatusContact = async (req, res) => {
+  const { favorite } = req.body;
+
+  const updatedContact = await contactsServices.updateContact(req.params.id, {
+    favorite,
+  });
+
+  if (!updatedContact) {
+    res.status(404).json({ message: 'Not found' });
+    return;
+  }
+
+  res.status(200).json(updatedContact);
+};
+
 export default {
   getAllContacts: toController(getAllContacts),
   getOneContact: toController(getOneContact),
   deleteContact: toController(deleteContact),
   createContact: toController(createContact),
   updateContact: toController(updateContact),
+  updateStatusContact: toController(updateStatusContact),
 };
