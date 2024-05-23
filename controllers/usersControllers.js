@@ -16,9 +16,13 @@ const registerUser = async (req, res) => {
   }
 
   const newUser = await createUser({ email, password });
-  const { password: _, ...userWithoutPassword } = newUser.toObject();
 
-  res.status(200).json({ user: userWithoutPassword });
+  res.status(201).json({
+    user: {
+      email: newUser.email,
+      subscription: newUser.subscription,
+    },
+  });
 };
 
 const loginUser = async (req, res) => {
