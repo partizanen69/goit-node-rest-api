@@ -1,7 +1,7 @@
 import UserModel from '../db/users.model.js';
 import toHttpError from '../helpers/HttpError.js';
 import { compareHash, createToken } from '../helpers/auth.js';
-import { createUser, updateUserById } from '../services/usersServices.js';
+import * as userService from '../services/usersServices.js';
 import { toController } from '../utils/api.js';
 
 const registerUser = async (req, res) => {
@@ -15,7 +15,7 @@ const registerUser = async (req, res) => {
     return;
   }
 
-  const newUser = await createUser({ email, password });
+  const newUser = await userService.createUser({ email, password });
 
   res.status(201).json({
     user: {
@@ -41,7 +41,7 @@ const loginUser = async (req, res) => {
   const token = createToken({
     id: user._id,
   });
-  await updateUserById(user._id, { token });
+  await userService.updateUserById(user._id, { token });
 
   res.json({
     token,
@@ -54,7 +54,7 @@ const loginUser = async (req, res) => {
 
 const logoutUser = async (req, res) => {
   const user = req.user;
-  await updateUserById(user.id, { token: null });
+  await userService.updateUserById(user.id, { token: null });
   res.status(204).send();
 };
 
@@ -66,9 +66,20 @@ const getCurrentUser = (req, res) => {
   });
 };
 
+const updateAvatar = async (req, res) => {
+  const avatarRelativePath = await userService.updateAvatar({
+    filePath: req.file.path,
+    userId: req.user.id,
+  });
+  res.status(200).json({
+    avatarURL: avatarRelativePath,
+  });
+};
+
 export default {
   registerUser: toController(registerUser),
   loginUser: toController(loginUser),
   logoutUser: toController(logoutUser),
   getCurrentUser: toController(getCurrentUser),
+  updateAvatar: toController(updateAvatar),
 };
