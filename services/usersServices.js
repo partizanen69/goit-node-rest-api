@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import path from 'path';
 import * as gravatar from 'gravatar';
 import jimp from 'jimp';
+import { nanoid } from 'nanoid';
 
 export const createUser = async ({ email, password }) => {
   const hashPassword = await bcrypt.hash(password, 10);
@@ -14,6 +15,7 @@ export const createUser = async ({ email, password }) => {
     avatarURL: gravatar.url(email, {
       protocol: 'https',
     }),
+    verificationToken: nanoid(),
   });
 };
 
