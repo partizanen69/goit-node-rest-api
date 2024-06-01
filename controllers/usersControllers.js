@@ -67,6 +67,10 @@ const getCurrentUser = (req, res) => {
 };
 
 const updateAvatar = async (req, res) => {
+  if (!req.file?.path) {
+    throw toHttpError(400, 'No file found in the request');
+  }
+
   const avatarRelativePath = await userService.updateAvatar({
     filePath: req.file.path,
     userId: req.user.id,

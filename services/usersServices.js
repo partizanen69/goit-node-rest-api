@@ -23,8 +23,8 @@ export const updateUserById = (id, updatePayload) => {
 
 export const updateAvatar = async ({ filePath, userId }) => {
   const extension = filePath.split('.').pop();
-  const relativePath = `public/avatars/${userId}-avatar.${extension}`;
-  const userAvatarPath = path.resolve(relativePath);
+  const relativePath = `avatars/${userId}-avatar.${extension}`;
+  const userAvatarPath = path.resolve(`public/${relativePath}`);
 
   const jimpImgObject = await jimp.read(filePath);
   await jimpImgObject.resize(250, 250).write(userAvatarPath);
